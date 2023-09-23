@@ -10,8 +10,8 @@
                     <button @click="handleLogout">Logout</button>
                 </div>
                 <div v-else>
-                    <router-link v-if="!user" class="btn" :to="{ name: 'Signup' }">Signup</router-link>
-                    <router-link v-if="!user" class="btn" :to="{ name: 'Login' }">Login</router-link>
+                    <router-link class="btn" :to="{ name: 'Signup' }">Signup</router-link>
+                    <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
                 </div>
             </div>
         </nav>
