@@ -7,6 +7,7 @@
 
             <div class="links">
                 <div v-if="user">
+                    <router-link :to="{ name: 'CreateCollection' }">Create Collection</router-link>
                     <button @click="handleLogout">Logout</button>
                 </div>
                 <div v-else>
