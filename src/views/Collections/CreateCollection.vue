@@ -1,10 +1,10 @@
 <template>
-    <form @submit.prevent="handleCreatePlaylist">
+    <form @submit.prevent="handleCreateCollection">
         <h4>Create New Movie Collection</h4>
         <input type="text" required placeholder="Collection Title" v-model="title" />
         <textarea required placeholder="Collection Description" v-model="description"></textarea>
 
-        <label>Upload Playlist Cover Image</label>
+        <label>Upload Collection Cover Image</label>
         <div class="error">{{ fileError }}</div>
         <input type="file" @change="handleFileUpload" />
         <button>Create</button>
@@ -13,17 +13,21 @@
 
 <script>
 import { ref } from 'vue'
+import useStorage from '@/composables/useStorage'
 
 export default {
     setup() {
+        const { filePath, url, uploadImage } = useStorage()
+
         const title = ref('')
         const description = ref('')
-        const coverImg = ref(null)
+        const file = ref(null)
         const fileError = ref('')
 
-        const handleCreatePlaylist = () => {
-            if (coverImg.value) {
-                console.log(title.value, description.value, coverImg.value)
+        const handleCreateCollection = async () => {
+            if (file.value) {
+                await uploadImage(file.value)
+                console.log('image Uploaded', url.value)
             }
         }
 
@@ -33,16 +37,16 @@ export default {
             const uploaded = e.target.files[0]
 
             if (uploaded && allowedFileTypes.includes(uploaded.type)) {
-                coverImg.value = uploaded
+                file.value = uploaded
                 fileError.value = null
             } else {
-                coverImg.value = null
+                file.value = null
                 fileError.value = 'Please select an image file (png, jpg or jpeg)'
             }
-            console.log(coverImg.value)
+            console.log(file.value)
         }
 
-        return { title, description, handleCreatePlaylist, handleFileUpload, fileError }
+        return { title, description, handleCreateCollection, handleFileUpload, fileError }
     },
 }
 </script>
