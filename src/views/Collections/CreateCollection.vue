@@ -7,27 +7,52 @@
         <label>Upload Collection Cover Image</label>
         <div class="error">{{ fileError }}</div>
         <input type="file" @change="handleFileUpload" />
-        <button>Create</button>
+        <button v-if="!isPending">Create</button>
+        <button v-else disabled>Loading...</button>
     </form>
 </template>
 
 <script>
 import { ref } from 'vue'
 import useStorage from '@/composables/useStorage'
+import useCollection from '@/composables/useCollection'
+import getUser from '@/composables/getUser'
+import { timestamp } from '@/firebase/config'
 
 export default {
     setup() {
         const { filePath, url, uploadImage } = useStorage()
+        const { error, addDocument } = useCollection('collections')
+        const { user } = getUser()
 
         const title = ref('')
         const description = ref('')
         const file = ref(null)
         const fileError = ref('')
+        const isPending = ref(false)
 
         const handleCreateCollection = async () => {
             if (file.value) {
+                isPending.value = true
+
                 await uploadImage(file.value)
-                console.log('image Uploaded', url.value)
+
+                await addDocument({
+                    title: title.value,
+                    description: description.value,
+                    userId: user.value.uid,
+                    userName: user.value.displayName,
+                    coverUrl: url.value,
+                    filePath: filePath.value,
+                    movies: [],
+                    createdAt: timestamp(),
+                })
+
+                isPending.value = false
+
+                if (!error.value) {
+                    console.log('collection added')
+                }
             }
         }
 
@@ -46,7 +71,7 @@ export default {
             console.log(file.value)
         }
 
-        return { title, description, handleCreateCollection, handleFileUpload, fileError }
+        return { title, description, handleCreateCollection, handleFileUpload, fileError, isPending }
     },
 }
 </script>
