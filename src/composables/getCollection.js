@@ -1,38 +1,37 @@
-import { projectFirestore } from '../firebase/config'
 import { ref, watchEffect } from 'vue'
+import { projectFirestore } from '../firebase/config'
 
 const getCollection = (collection) => {
-    const error = ref(null)
     const documents = ref(null)
+    const error = ref(null)
 
-    let collectionRef = projectFirestore.collection(collection).orderBy('sentAt')
+    // register the firestore collection reference
+    let collectionRef = projectFirestore.collection(collection).orderBy('createdAt')
 
     const unsub = collectionRef.onSnapshot(
         (snap) => {
             let results = []
-
             snap.docs.forEach((doc) => {
-                doc.data().sentAt && results.push({ ...doc.data(), id: doc.id })
+                // must wait for the server to create the timestamp & send it back
+                doc.data().createdAt && results.push({ ...doc.data(), id: doc.id })
             })
 
+            // update values
             documents.value = results
             error.value = null
         },
         (err) => {
-            error.value = err.message
+            console.log(err.message)
             documents.value = null
-            error.value = 'Could not fetch data'
+            error.value = 'could not fetch the data'
         }
     )
 
     watchEffect((onInvalidate) => {
-        // unsubscribe from prev collection when watcher is stopped (component unmounted)
-        onInvalidate(() => {
-            unsub()
-        })
+        onInvalidate(() => unsub())
     })
 
-    return { documents, error }
+    return { error, documents }
 }
 
 export default getCollection
