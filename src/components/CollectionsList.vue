@@ -1,19 +1,21 @@
 <template>
     <div v-for="collection in collections" :key="collection.id">
-        <div class="single-collection">
-            <div class="thumbnail">
-                <img :src="collection.coverUrl" />
-            </div>
+        <router-link :to="{ name: 'CollectionDetails', params: { id: collection.id } }">
+            <div class="single-collection">
+                <div class="thumbnail">
+                    <img :src="collection.coverUrl" />
+                </div>
 
-            <div class="info">
-                <h3>{{ collection.title }}</h3>
-                <p>Created By {{ collection.userName }}</p>
-            </div>
+                <div class="info">
+                    <h3>{{ collection.title }}</h3>
+                    <p>Created By {{ collection.userName }}</p>
+                </div>
 
-            <div class="movie-number">
-                <p>{{ collection.movies.length }}</p>
+                <div class="movie-number">
+                    <p>{{ collection.movies.length }}</p>
+                </div>
             </div>
-        </div>
+        </router-link>
     </div>
 </template>
 
