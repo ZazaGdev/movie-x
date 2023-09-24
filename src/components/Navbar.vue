@@ -28,7 +28,6 @@ export default {
         const { logout } = useLogout()
         const router = useRouter()
         const { user } = getUser()
-        console.log(user.value)
 
         const handleLogout = async () => {
             await logout()
