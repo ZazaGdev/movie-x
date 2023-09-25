@@ -13,11 +13,13 @@
 
         <div class="movie-list">
             <p>movie list here</p>
+            <AddMovie v-if="ownership" :collection="collection" />
         </div>
     </div>
 </template>
 
 <script>
+import AddMovie from '@/components/AddMovie.vue'
 import getDocument from '@/composables/getDocument'
 import useDocument from '@/composables/useDocument'
 import useStorage from '@/composables/useStorage'
@@ -27,6 +29,7 @@ import { useRouter } from 'vue-router'
 
 export default {
     props: ['id'],
+    components: { AddMovie },
     setup(props) {
         const { error, document: collection } = getDocument('collections', props.id)
         const { user } = getUser()
