@@ -1,19 +1,22 @@
 <template>
-    <div v-if="error" class="error">{{ error }}</div>
+    <div class="error" v-if="error">{{ error }}</div>
     <div v-if="collection" class="collection-details">
         <div class="collection-info">
             <div class="cover">
                 <img :src="collection.coverUrl" />
             </div>
             <h2>{{ collection.title }}</h2>
-            <p class="username">Created By {{ collection.userName }}</p>
+            <p class="username">Created by {{ collection.userName }}</p>
             <p class="description">{{ collection.description }}</p>
-
-            <button v-if="ownership">Delete Collection</button>
+            <button v-if="ownership">Delete collection</button>
         </div>
-        <div class="movie-list"></div>
+
+        <div class="movie-list">
+            <p>movie list here</p>
+        </div>
     </div>
 </template>
+
 <script>
 import getDocument from '@/composables/getDocument'
 import getUser from '@/composables/getUser'
@@ -26,11 +29,8 @@ export default {
         const { user } = getUser()
 
         const ownership = computed(() => {
-            return collection.value && user.value && user.value.id == collection.value.userId
+            return collection.value && user.value && user.value.uid == collection.value.userId
         })
-
-        console.log(collection)
-        console.log(collection.value)
 
         return { error, collection, ownership }
     },
