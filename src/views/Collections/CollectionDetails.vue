@@ -8,20 +8,31 @@
             <h2>{{ collection.title }}</h2>
             <p class="username">Created By {{ collection.userName }}</p>
             <p class="description">{{ collection.description }}</p>
+
+            <button v-if="ownership">Delete Collection</button>
         </div>
         <div class="movie-list"></div>
     </div>
 </template>
 <script>
 import getDocument from '@/composables/getDocument'
+import getUser from '@/composables/getUser'
+import { computed } from 'vue'
 
 export default {
     props: ['id'],
     setup(props) {
-        console.log(props.id)
         const { error, document: collection } = getDocument('collections', props.id)
+        const { user } = getUser()
 
-        return { error, collection }
+        const ownership = computed(() => {
+            return collection.value && user.value && user.value.id == collection.value.userId
+        })
+
+        console.log(collection)
+        console.log(collection.value)
+
+        return { error, collection, ownership }
     },
 }
 </script>
