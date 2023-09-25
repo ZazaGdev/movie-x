@@ -14,16 +14,20 @@
 
 <script>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import useStorage from '@/composables/useStorage'
 import useCollection from '@/composables/useCollection'
 import getUser from '@/composables/getUser'
 import { timestamp } from '@/firebase/config'
+import CollectionDetails from './CollectionDetails.vue'
 
 export default {
     setup() {
         const { filePath, url, uploadImage } = useStorage()
         const { error, addDocument } = useCollection('collections')
         const { user } = getUser()
+
+        const router = useRouter()
 
         const title = ref('')
         const description = ref('')
@@ -37,7 +41,7 @@ export default {
 
                 await uploadImage(file.value)
 
-                await addDocument({
+                const res = await addDocument({
                     title: title.value,
                     description: description.value,
                     userId: user.value.uid,
@@ -51,7 +55,7 @@ export default {
                 isPending.value = false
 
                 if (!error.value) {
-                    console.log('collection added')
+                    router.push({name: 'CollectionDetails', params:{ id: res.id }})
                 }
             }
         }
