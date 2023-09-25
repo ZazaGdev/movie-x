@@ -8,7 +8,7 @@
             <h2>{{ collection.title }}</h2>
             <p class="username">Created by {{ collection.userName }}</p>
             <p class="description">{{ collection.description }}</p>
-            <button v-if="ownership">Delete collection</button>
+            <button v-if="ownership" @click="handleDelete">Delete collection</button>
         </div>
 
         <div class="movie-list">
@@ -19,20 +19,33 @@
 
 <script>
 import getDocument from '@/composables/getDocument'
+import useDocument from '@/composables/useDocument'
+import useStorage from '@/composables/useStorage'
 import getUser from '@/composables/getUser'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default {
     props: ['id'],
     setup(props) {
         const { error, document: collection } = getDocument('collections', props.id)
         const { user } = getUser()
+        const { deleteDoc } = useDocument('collections', props.id)
+        const { deleteImage } = useStorage()
+
+        const router = useRouter()
 
         const ownership = computed(() => {
             return collection.value && user.value && user.value.uid == collection.value.userId
         })
 
-        return { error, collection, ownership }
+        const handleDelete = async () => {
+            await deleteImage(collection.value.filePath)
+            await deleteDoc()
+            router.push({ name: 'Home' })
+        }
+
+        return { error, collection, ownership, handleDelete }
     },
 }
 </script>

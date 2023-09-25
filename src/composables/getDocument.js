@@ -13,7 +13,6 @@ const getDocument = (collection, documentId) => {
             if (doc.data()) {
                 document.value = { ...doc.data(), id: doc.id }
                 error.value = null
-                console.log('Document data:', document.value) // This should log the actual data
             } else {
                 error.value = 'document does not exist'
             }

@@ -22,7 +22,18 @@ const useStorage = () => {
         }
     }
 
-    return { url, filePath, error, uploadImage }
+    const deleteImage = async (path) => {
+        const storageRef = projectStorage.ref(path)
+
+        try {
+            await storageRef.delete()
+        } catch (error) {
+            console.log(error.message)
+            error.value = error.message
+        }
+    }
+
+    return { url, filePath, error, uploadImage, deleteImage }
 }
 
 export default useStorage
