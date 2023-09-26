@@ -4,6 +4,7 @@ import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
 import CreateCollection from '../views/Collections/CreateCollection.vue'
 import CollectionDetails from '../views/Collections/CollectionDetails.vue'
+import UserCollections from '../views/Collections/UserCollections.vue'
 
 // Route guard
 import { projectAuth } from '@/firebase/config'
@@ -47,6 +48,12 @@ const routes = [
         component: CollectionDetails,
         beforeEnter: requireAuth,
         props: true,
+    },
+    {
+        path: '/collections/user',
+        name: 'UserCollections',
+        component: UserCollections,
+        beforeEnter: requireAuth,
     },
 ]
 
