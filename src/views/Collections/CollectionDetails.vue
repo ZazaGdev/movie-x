@@ -12,7 +12,14 @@
         </div>
 
         <div class="movie-list">
-            <p>movie list here</p>
+            <div v-if="!collection.movies.length">No Movies have been added to this collection yet</div>
+            <div v-for="movie in collection.movies" :key="movie.id" class="single-movie">
+                <div class="details">
+                    <h3>{{ movie.title }}</h3>
+                    <p>{{ movie.artist }}</p>
+                </div>
+                <button v-if="ownership" @click="handleDeleteMovie(movie.id)">Delete Movie</button>
+            </div>
             <AddMovie v-if="ownership" :collection="collection" />
         </div>
     </div>
@@ -33,7 +40,7 @@ export default {
     setup(props) {
         const { error, document: collection } = getDocument('collections', props.id)
         const { user } = getUser()
-        const { deleteDoc } = useDocument('collections', props.id)
+        const { deleteDoc, updateDoc } = useDocument('collections', props.id)
         const { deleteImage } = useStorage()
 
         const router = useRouter()
@@ -42,13 +49,18 @@ export default {
             return collection.value && user.value && user.value.uid == collection.value.userId
         })
 
+        const handleDeleteMovie = async (id) => {
+            let filteredMovies = collection.value.movies.filter((movie) => movie.id != id)
+            await updateDoc({ filteredMovies })
+        }
+
         const handleDelete = async () => {
             await deleteImage(collection.value.filePath)
             await deleteDoc()
             router.push({ name: 'Home' })
         }
 
-        return { error, collection, ownership, handleDelete }
+        return { error, collection, ownership, handleDelete, handleDeleteMovie }
     },
 }
 </script>
@@ -91,5 +103,13 @@ export default {
 }
 .description {
     text-align: left;
+}
+.single-movie {
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--secondary);
+    margin-bottom: 20px;
 }
 </style>
