@@ -4,7 +4,7 @@
         <form v-if="showForm" @submit.prevent="handleSubmit">
             <h2>Add a new movie</h2>
             <input type="text" placeholder="Movie Title" required v-model="title" />
-            <input type="text" placeholder="Artist" required v-model="artist" />
+            <input type="text" placeholder="director" required v-model="director" />
             <button>Add</button>
         </form>
     </div>
@@ -17,7 +17,7 @@ export default {
     props: ['collection'],
     setup(props) {
         const title = ref('')
-        const artist = ref('')
+        const director = ref('')
         const showForm = ref(false)
 
         const { updateDoc } = useDocument('collections', props.collection.id)
@@ -25,7 +25,7 @@ export default {
         const handleSubmit = async () => {
             let newMovie = {
                 title: title.value,
-                artist: artist.value,
+                director: director.value,
                 id: Math.floor(Math.random() * 1000000),
             }
 
@@ -34,10 +34,10 @@ export default {
             })
 
             title.value = ''
-            artist.value = ''
+            director.value = ''
         }
 
-        return { title, artist, showForm, handleSubmit }
+        return { title, director, showForm, handleSubmit }
     },
 }
 </script>

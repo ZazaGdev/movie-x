@@ -41,14 +41,15 @@ export default {
     transition: all ease 0.2s;
 }
 .thumbnail {
-    max-width: 100px;
-    max-height: 100px;
+    width: 100px;
+    height: 100px;
     overflow: hidden;
     border-radius: 10px;
 }
 img {
-    max-width: 150%;
-    max-height: 150%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 .info {

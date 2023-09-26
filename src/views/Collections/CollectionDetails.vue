@@ -16,7 +16,7 @@
             <div v-for="movie in collection.movies" :key="movie.id" class="single-movie">
                 <div class="details">
                     <h3>{{ movie.title }}</h3>
-                    <p>{{ movie.artist }}</p>
+                    <p>{{ movie.director }}</p>
                 </div>
                 <button v-if="ownership" @click="handleDeleteMovie(movie.id)">Delete Movie</button>
             </div>
@@ -50,8 +50,8 @@ export default {
         })
 
         const handleDeleteMovie = async (id) => {
-            let filteredMovies = collection.value.movies.filter((movie) => movie.id != id)
-            await updateDoc({ filteredMovies })
+            let movies = collection.value.movies.filter((movie) => movie.id != id)
+            await updateDoc({ movies })
         }
 
         const handleDelete = async () => {
@@ -77,15 +77,15 @@ export default {
     position: relative;
     padding: 160px;
 }
+
 .cover img {
     display: block;
     position: absolute;
     top: 0;
     left: 0;
-    min-width: 100%;
-    min-height: 100%;
-    max-width: 200%;
-    max-height: 200%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .collection-info {
     text-align: center;
